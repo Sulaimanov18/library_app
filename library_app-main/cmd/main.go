@@ -1,12 +1,12 @@
 package main
 
 import (
-    "log"
-    "github.com/gin-gonic/gin"
-    "github.com/Sulaimanov18/library_app/internal/books"
-    "github.com/Sulaimanov18/library_app/internal/common"
-)
+	"log"
 
+	"github.com/gin-gonic/gin"
+	"github.com/Sulaimanov18/library_app/internal/books"
+	"github.com/Sulaimanov18/library_app/internal/common"
+)
 
 func main() {
 	r := gin.Default()
@@ -18,4 +18,3 @@ func main() {
 		log.Fatalf("Failed to run server: %v", err)
 	}
 }
-
