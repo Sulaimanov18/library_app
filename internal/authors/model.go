@@ -1,17 +1,23 @@
 package authors
 
-
-type Authors struct{
+import (
+	"time"
+)
+type Author struct{
 	ID int `json:"id"`
 	Name string `json:"name"`
 	Bio string `json:"bio"`
-	Created string `json:"date"`
+	CreateAt time.Time `json:"created_at"`
 	
 }
 
-type CreateAuthors struct {
-	Title       string `json:"title" binding:"required"`
-	Description string `json:"description"`
-	Publisher   string `json:"publisher"`
-	Count       int    `json:"count"`
+type CreateAuthorRequest struct {
+	Name string `json:"name" binding:"required"`
+	Bio string `json:"bio"`
 }
+
+type UpdateAuthorRequest struct{
+	Name string `json:"name"`
+	Bio string `json:"bio"`
+}
+
