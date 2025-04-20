@@ -16,7 +16,7 @@ func RegisterAuthorRoutes(r *gin.Engine, service *AuthorService) {
 		id, _ := strconv.Atoi(c.Param("id"))
 		author, err := service.GetByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Автор не найден"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "Author not found"})
 			return
 		}
 		c.JSON(http.StatusOK, author)

@@ -6,6 +6,9 @@ services:
     container_name: library_app
     ports:
       - "8080:8080"
+    volumes:
+      - .:/app   
+
     depends_on:
       - db
     environment:
@@ -14,8 +17,6 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: library_db
-    volumes:
-      - .:/app
 
   db:
     image: postgres:15
