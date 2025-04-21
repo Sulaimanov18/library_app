@@ -30,7 +30,7 @@ func main() {
 	r := gin.Default()
 
 	common.RegisterTestRoutes(r)
-	books.RegisterBookRoutes(r, books.NewBookService())             // временно
+	books.RegisterBookRoutes(r, books.NewBookService(conn))             // временно
 	authors.RegisterAuthorRoutes(r, authors.NewAuthorService(conn)) // <-- ВАЖНО
 
 	if err := r.Run(":8080"); err != nil {
