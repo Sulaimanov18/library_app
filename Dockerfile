@@ -24,4 +24,3 @@ ENV PORT=8080
 CMD ["./library_app"]
 
 
-257 + 1000 + 700+ 500 

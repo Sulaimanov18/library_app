@@ -1,12 +1,15 @@
 package main
 
 import (
-	"log"
-
 	"context"
+	"database/sql"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/pressly/goose/v3"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/Sulaimanov18/library_app/internal/authors"
 	"github.com/Sulaimanov18/library_app/internal/books"
@@ -15,25 +18,45 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load() // загружаем .env
+	_ = godotenv.Load()
 
-	conn, err := db.Connect() // подключение к базе
+	// Создаем строку подключения (используется в goose)
+	connStr := db.BuildConnString()
+
+	// Открываем соединение с использованием sql.DB
+	sqlDB, err := sql.Open("pgx", connStr)
 	if err != nil {
-		log.Fatalf("Cannot connect to DB: %v", err)
+		log.Fatalf("Cannot open sql.DB: %v", err)
 	}
-	defer func() {
-		if err := conn.Close(context.Background()); err != nil {
-			log.Printf("Error closing DB connection: %v", err)
-		}
-	}()
+	defer sqlDB.Close()
 
+	// Выполняем миграции
+	if err := runMigrations(sqlDB); err != nil {
+		log.Fatalf("Migration error: %v", err)
+	}
+	log.Println("✅ Migrations completed")
+
+	// Подключаемся через pgx.Conn для передачи в сервисы
+	pgxConn, err := db.Connect()
+	if err != nil {
+		log.Fatalf("Cannot connect via pgx: %v", err)
+	}
+	defer pgxConn.Close(context.Background())
+
+	// Запускаем Gin-сервер
 	r := gin.Default()
-
 	common.RegisterTestRoutes(r)
-	books.RegisterBookRoutes(r, books.NewBookService(conn))             // временно
-	authors.RegisterAuthorRoutes(r, authors.NewAuthorService(conn)) // <-- ВАЖНО
+	books.RegisterBookRoutes(r, books.NewBookService(pgxConn))
+	authors.RegisterAuthorRoutes(r, authors.NewAuthorService(pgxConn))
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 	}
+}
+
+func runMigrations(db *sql.DB) error {
+	if err := goose.SetDialect("postgres"); err != nil {
+		return err
+	}
+	return goose.Up(db, "./migrations")
 }

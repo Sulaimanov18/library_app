@@ -29,7 +29,7 @@ func Connect() (*pgx.Conn, error) {
 
 	// Проверим соединение
 	if err := conn.Ping(ctx); err != nil {
-		return nil, fmt.Errorf("Cannot ping DB: %w", err)
+		return nil, fmt.Errorf("cannot ping DB: %w", err)
 	}
 
 	return conn, nil
