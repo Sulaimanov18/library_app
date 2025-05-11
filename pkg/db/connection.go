@@ -25,5 +25,5 @@ func BuildConnString() string {
 // Connect returns a *pgx.Conn for use in services
 func ConnectDB() (*pgx.Conn, error) {
 	connStr := BuildConnString()
-	return pgx.Connect(context.Background(), connStr)
+return pgx.Connect(context.Background(), connStr)
 }
