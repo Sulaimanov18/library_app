@@ -14,6 +14,7 @@ import (
 	"github.com/Sulaimanov18/library_app/internal/authors"
 	"github.com/Sulaimanov18/library_app/internal/books"
 	"github.com/Sulaimanov18/library_app/internal/common"
+	"github.com/Sulaimanov18/library_app/internal/readers"
 	"github.com/Sulaimanov18/library_app/pkg/db"
 )
 
@@ -48,6 +49,7 @@ func main() {
 	common.RegisterTestRoutes(r)
 	books.RegisterBookRoutes(r, books.NewBookService(pgxConn))
 	authors.RegisterAuthorRoutes(r, authors.NewAuthorService(pgxConn))
+	readers.RegisterReaderRoutes(r, readers.NewReaderService(pgxConn))
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
