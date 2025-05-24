@@ -18,6 +18,10 @@ services:
       DB_NAME: ${POSTGRES_DB}
     env_file:
       - .env
+    command: >
+      sh -c "chmod +x /app/scripts/init-db.sh &&
+             /app/scripts/init-db.sh &&
+             ./library_app"
 
   db:
     image: postgres:15
