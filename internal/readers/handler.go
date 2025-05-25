@@ -21,7 +21,7 @@ func RegisterReaderRoutes(r *gin.Engine, service *ReaderService) {
 		id, _ := strconv.Atoi(c.Param("id"))
 		reader, err := service.GetByID(id)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 		if reader == nil {
@@ -34,12 +34,12 @@ func RegisterReaderRoutes(r *gin.Engine, service *ReaderService) {
 	r.POST("/readers", func(c *gin.Context) {
 		var req CreateReaderRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 		reader, err := service.Create(req)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusCreated, reader)
